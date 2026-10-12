@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@provost/common": ["./libs/common/src"],
+      "@provost/common/*": ["./libs/common/src/*"],
+      "@provost/database": ["./libs/database/src"],
+      "@provost/database/*": ["./libs/database/src/*"],
+      "@provost/matching": ["./libs/matching/src"],
+      "@provost/matching/*": ["./libs/matching/src/*"]
+    },
+    "types": ["vitest/globals", "node"]
+  },
+  "exclude": ["node_modules", "dist"]
+}
