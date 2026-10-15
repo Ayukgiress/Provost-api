@@ -4,9 +4,9 @@ import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class ListMatchesDto {
-  @ApiPropertyOptional({ enum: ['eligible', 'partial', 'ineligible'] })
+  @ApiPropertyOptional({ enum: ['apply', 'fix_first', 'skip'] })
   @IsOptional() @IsString()
-  verdict?: 'eligible' | 'partial' | 'ineligible';
+  verdict?: 'apply' | 'fix_first' | 'skip';
 
   @ApiPropertyOptional({ enum: OpportunityType })
   @IsOptional() @IsEnum(OpportunityType) type?: OpportunityType;

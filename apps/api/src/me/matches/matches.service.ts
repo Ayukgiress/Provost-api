@@ -5,7 +5,7 @@ import { matchOpportunity } from '@provost/matching';
 import { Repository } from 'typeorm';
 import type { ListMatchesDto } from './dto/list-matches.dto.js';
 
-type Verdict = 'eligible' | 'partial' | 'ineligible';
+type Verdict = 'apply' | 'fix_first' | 'skip';
 
 @Injectable()
 export class MatchesService {
@@ -29,18 +29,24 @@ export class MatchesService {
         citizenship: profile?.citizenship,
         countryOfResidence: profile?.residenceCountry,
         gpa: profile?.gpa === null || profile?.gpa === undefined ? null : Number(profile.gpa),
+        birthYear: profile?.birthYear,
+        experienceYears: profile?.experienceYears,
+        languages: profile?.languages,
+        goals: profile?.goals,
+        testScores: profile?.testScores,
       }, {
         id: opportunity.id,
         title: opportunity.title,
         eligibility: opportunity.eligibility as Record<string, unknown> | null,
+        deadline: opportunity.deadline,
+        documentsNeeded: opportunity.documentsNeeded,
       });
-      const verdict: Verdict = result.score === 100 ? 'eligible' : result.score === 0 ? 'ineligible' : 'partial';
-      return { opportunity, ...result, verdict };
+      return { opportunity, ...result };
     });
     const counts = matches.reduce<Record<Verdict, number>>((result, item) => {
       result[item.verdict] += 1;
       return result;
-    }, { eligible: 0, partial: 0, ineligible: 0 });
+    }, { apply: 0, fix_first: 0, skip: 0 });
     const filtered = filters.verdict ? matches.filter((item) => item.verdict === filters.verdict) : matches;
     const page = Math.max(1, filters.page ?? 1);
     const limit = Math.min(100, Math.max(1, filters.limit ?? 20));

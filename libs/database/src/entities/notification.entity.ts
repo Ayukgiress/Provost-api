@@ -7,6 +7,7 @@ import { NotificationChannel } from './enums.js';
  */
 @Entity('notifications')
 @Index(['userId', 'sentAt'])
+@Index(['opportunityId'])
 export class Notification extends BaseEntity {
   /** Supabase auth user id. */
   @Column({ type: 'uuid' })
@@ -23,8 +24,16 @@ export class Notification extends BaseEntity {
   @Column({ type: 'text' })
   type: string;
 
-  @Column({ type: 'timestamptz' })
-  sentAt: Date;
+  /** Opportunity associated with the notification, when applicable. */
+  @Column({ type: 'uuid', nullable: true })
+  opportunityId: string | null;
+
+  /** Notification details consumed by delivery clients/workers. */
+  @Column({ type: 'jsonb', nullable: true })
+  metadata: Record<string, unknown> | null;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  sentAt: Date | null;
 
   /** Delivery status: "pending", "sent", "failed". */
   @Column({ type: 'text', default: 'pending' })

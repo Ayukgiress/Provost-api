@@ -10,6 +10,7 @@ import { ProfileModule } from './me/profile/profile.module.js';
 import { SavedModule } from './me/saved/saved.module.js';
 import { OpportunitiesModule } from './opportunities/opportunities.module.js';
 import { ReportsModule } from './opportunities/reports.module.js';
+import { AdminModule } from './admin/admin.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReportsModule } from './opportunities/reports.module.js';
     MatchesModule,
     SavedModule,
     ReportsModule,
+    AdminModule,
     AccountModule,
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],

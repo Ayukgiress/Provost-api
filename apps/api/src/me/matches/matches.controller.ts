@@ -12,7 +12,7 @@ export class MatchesController {
 
   @Get()
   @ApiOperation({ summary: 'Get opportunities matched to the applicant profile' })
-  @ApiOkResponse({ description: 'Paginated matches and counts by eligible, partial, and ineligible verdict' })
+  @ApiOkResponse({ description: 'Paginated matches and counts by apply, fix_first, and skip verdict' })
   list(@CurrentUser() user: AuthenticatedUser, @Query() query: ListMatchesDto) {
     return this.matches.list(user.id, query);
   }

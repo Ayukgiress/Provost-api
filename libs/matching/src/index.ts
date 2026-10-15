@@ -4,6 +4,7 @@ export {
   type MatchUserProfile,
   type MatchOpportunity,
   type MatchResult,
-  type CriterionResult,
-  type CriterionStatus,
+  type MatchVerdict,
+  type ChecklistItem,
+  type ChecklistStatus,
 } from './matching-engine.js';
