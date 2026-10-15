@@ -4,12 +4,24 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { CommonModule, RequestIdMiddleware, type Env } from '@provost/common';
 import { DatabaseModule } from '@provost/database';
 import { HealthModule } from './health/health.module.js';
+import { AccountModule } from './me/account/account.module.js';
+import { MatchesModule } from './me/matches/matches.module.js';
+import { ProfileModule } from './me/profile/profile.module.js';
+import { SavedModule } from './me/saved/saved.module.js';
+import { OpportunitiesModule } from './opportunities/opportunities.module.js';
+import { ReportsModule } from './opportunities/reports.module.js';
 
 @Module({
   imports: [
     CommonModule,
     DatabaseModule,
     HealthModule,
+    ProfileModule,
+    OpportunitiesModule,
+    MatchesModule,
+    SavedModule,
+    ReportsModule,
+    AccountModule,
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService<Env, true>) => [

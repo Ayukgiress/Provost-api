@@ -24,6 +24,10 @@ export const envSchema = z.object({
   SUPABASE_JWT_SECRET: z.string().optional(),
   SUPABASE_JWKS_URL: z.string().url().optional(),
   SUPABASE_JWT_ISSUER: z.string().optional(),
+  // Optional service-role configuration used only for account and file deletion.
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+  SUPABASE_STORAGE_BUCKET: z.string().default('documents'),
 
   // Rate limiting
   THROTTLE_TTL: z.coerce.number().int().positive().default(60),
