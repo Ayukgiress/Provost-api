@@ -43,12 +43,16 @@ async function bootstrap(): Promise<void> {
   if (!isProd || swaggerEnabled) {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Provost API')
-      .setDescription('Scholarship, fellowship & grant discovery and application tracking')
+      .setDescription(
+        'Scholarship, fellowship & grant discovery and application tracking',
+      )
       .setVersion('0.1.0')
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup('docs', app, document);
+    SwaggerModule.setup('docs', app, document, {
+      jsonDocumentUrl: 'openapi.json',
+    });
   }
 
   const port = config.get('PORT', { infer: true });

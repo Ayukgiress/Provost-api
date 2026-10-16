@@ -1,0 +1,1568 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Liveness check",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/me/profile": {
+      "get": {
+        "operationId": "ProfileController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Profile and 0–100 completeness score"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get the authenticated applicant profile",
+        "tags": [
+          "Profile"
+        ]
+      },
+      "put": {
+        "operationId": "ProfileController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated profile and completeness score"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create or update the authenticated applicant profile",
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/me/documents": {
+      "get": {
+        "operationId": "DocumentsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List the authenticated user’s documents",
+        "tags": [
+          "Document vault"
+        ]
+      }
+    },
+    "/me/documents/upload-url": {
+      "post": {
+        "operationId": "DocumentsController_createUpload",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a signed upload URL for a PDF, DOCX, JPG, or PNG up to 10 MB",
+        "tags": [
+          "Document vault"
+        ]
+      }
+    },
+    "/me/documents/{id}/download-url": {
+      "get": {
+        "operationId": "DocumentsController_download",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a short-lived signed download URL for an owned document",
+        "tags": [
+          "Document vault"
+        ]
+      }
+    },
+    "/me/drafts": {
+      "get": {
+        "operationId": "DraftsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List the authenticated user’s drafts",
+        "tags": [
+          "Application drafts"
+        ]
+      },
+      "post": {
+        "operationId": "DraftsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDraftDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate an unsent, fact-grounded application draft (Plus plan required)",
+        "tags": [
+          "Application drafts"
+        ]
+      }
+    },
+    "/opportunities": {
+      "get": {
+        "operationId": "OpportunitiesController_list",
+        "parameters": [
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "scholarship",
+                "fellowship",
+                "grant"
+              ]
+            }
+          },
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "level",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "closing_soon",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated opportunity results; expired listings are excluded"
+          }
+        },
+        "summary": "Search published, unexpired opportunities",
+        "tags": [
+          "Opportunities"
+        ]
+      }
+    },
+    "/opportunities/{slug}": {
+      "get": {
+        "operationId": "OpportunitiesController_get",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get a published, unexpired opportunity by slug",
+        "tags": [
+          "Opportunities"
+        ]
+      }
+    },
+    "/me/matches": {
+      "get": {
+        "operationId": "MatchesController_list",
+        "parameters": [
+          {
+            "name": "verdict",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "apply",
+                "fix_first",
+                "skip"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "scholarship",
+                "fellowship",
+                "grant"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated matches and counts by apply, fix_first, and skip verdict"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get opportunities matched to the applicant profile",
+        "tags": [
+          "Matches"
+        ]
+      }
+    },
+    "/me/saved": {
+      "get": {
+        "operationId": "SavedController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Applicant saved items"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List saved opportunities",
+        "tags": [
+          "Saved opportunities"
+        ]
+      },
+      "post": {
+        "operationId": "SavedController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSavedDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Save an opportunity (free plan limited to 3 active items)",
+        "tags": [
+          "Saved opportunities"
+        ]
+      },
+      "patch": {
+        "operationId": "SavedController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSavedDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a saved opportunity status or notes",
+        "tags": [
+          "Saved opportunities"
+        ]
+      },
+      "delete": {
+        "operationId": "SavedController_remove",
+        "parameters": [
+          {
+            "name": "opportunityId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a saved opportunity",
+        "tags": [
+          "Saved opportunities"
+        ]
+      }
+    },
+    "/opportunities/{id}/report": {
+      "post": {
+        "operationId": "ReportsController_create",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "A report; listings are automatically hidden at 3 pending reports"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Report a problematic opportunity",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/admin/dashboard": {
+      "get": {
+        "operationId": "AdminController_dashboard",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/review-queue": {
+      "get": {
+        "operationId": "AdminController_listReviewQueue",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "queue",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "needs_review",
+                "quick_approve",
+                "auto_rejected"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/review-queue/{id}": {
+      "get": {
+        "operationId": "AdminController_getReviewItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/review-queue/{id}/approve": {
+      "post": {
+        "operationId": "AdminController_approveReview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpportunityFieldsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/review-queue/{id}/publish": {
+      "post": {
+        "operationId": "AdminController_publishApprovedReview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/review-queue/{id}/reject": {
+      "post": {
+        "operationId": "AdminController_rejectReview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRejectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/review-queue/{id}/request-more-info": {
+      "post": {
+        "operationId": "AdminController_requestMoreInfo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMoreInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/opportunities": {
+      "post": {
+        "operationId": "AdminController_createOpportunity",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOpportunityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/opportunities/{id}": {
+      "patch": {
+        "operationId": "AdminController_editOpportunity",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpportunityFieldsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/opportunities/{id}/unpublish": {
+      "post": {
+        "operationId": "AdminController_unpublishOpportunity",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/sources": {
+      "get": {
+        "operationId": "AdminController_listSources",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      },
+      "post": {
+        "operationId": "AdminController_createSource",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSourceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/sources/{id}": {
+      "patch": {
+        "operationId": "AdminController_updateSource",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSourceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/sources/{id}/run-now": {
+      "post": {
+        "operationId": "AdminController_runSourceNow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/sources/{id}/scrape-runs": {
+      "get": {
+        "operationId": "AdminController_listScrapeRuns",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/reports": {
+      "get": {
+        "operationId": "AdminController_listReports",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "pending",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/reports/{id}/resolve": {
+      "patch": {
+        "operationId": "AdminController_resolveReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/me": {
+      "delete": {
+        "operationId": "AccountController_delete",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Account deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Permanently delete the applicant account, personal data, and stored files",
+        "tags": [
+          "Account"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Provost API",
+    "description": "Scholarship, fellowship & grant discovery and application tracking",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "citizenship": {
+            "type": "object",
+            "example": "US"
+          },
+          "residenceCountry": {
+            "type": "object",
+            "example": "CA"
+          },
+          "deadlineRemindersEnabled": {
+            "type": "boolean",
+            "description": "Opt out of deadline reminder emails",
+            "default": true
+          },
+          "birthYear": {
+            "type": "object",
+            "example": 1998,
+            "minimum": 1900,
+            "maximum": 2100
+          },
+          "educationLevel": {
+            "type": "string",
+            "enum": [
+              "high_school",
+              "bachelor",
+              "master",
+              "phd",
+              "professional"
+            ]
+          },
+          "fieldOfStudy": {
+            "type": "object",
+            "example": "Computer Science"
+          },
+          "institution": {
+            "type": "object",
+            "example": "Example University"
+          },
+          "gpa": {
+            "type": "object",
+            "example": 3.7,
+            "minimum": 0,
+            "maximum": 4
+          },
+          "graduationYear": {
+            "type": "object",
+            "example": 2027
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "testScores": {
+            "type": "object",
+            "example": {
+              "gre": 320,
+              "toefl": 105
+            }
+          },
+          "experienceYears": {
+            "type": "object",
+            "example": 2,
+            "minimum": 0,
+            "maximum": 80
+          },
+          "goals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateDocumentUploadDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Personal statement"
+          },
+          "fileType": {
+            "type": "string",
+            "enum": [
+              "pdf",
+              "docx",
+              "jpg",
+              "png"
+            ]
+          },
+          "sizeBytes": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10485760
+          }
+        },
+        "required": [
+          "label",
+          "fileType",
+          "sizeBytes"
+        ]
+      },
+      "CreateDraftDto": {
+        "type": "object",
+        "properties": {
+          "opportunityId": {
+            "type": "string",
+            "description": "Opportunity for which the application draft is being prepared"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Essay question or application prompt; treated as instructions, not as a source of applicant facts"
+          }
+        },
+        "required": [
+          "opportunityId"
+        ]
+      },
+      "CreateSavedDto": {
+        "type": "object",
+        "properties": {
+          "opportunityId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "opportunityId"
+        ]
+      },
+      "UpdateSavedDto": {
+        "type": "object",
+        "properties": {
+          "opportunityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "saved",
+              "in_progress",
+              "submitted",
+              "decision"
+            ]
+          },
+          "notes": {
+            "type": "object",
+            "maxLength": 10000
+          }
+        }
+      },
+      "CreateReportDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "scam",
+              "wrong_info",
+              "expired",
+              "other"
+            ]
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "OpportunityFieldsDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "funderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scholarship",
+              "fellowship",
+              "grant"
+            ]
+          },
+          "amount": {
+            "type": "object"
+          },
+          "currency": {
+            "type": "object"
+          },
+          "deadline": {
+            "type": "object",
+            "format": "date",
+            "nullable": true
+          },
+          "eligibility": {
+            "type": "object",
+            "nullable": true
+          },
+          "requirements": {
+            "type": "object"
+          },
+          "documentsNeeded": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "applyUrl": {
+            "type": "object",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "object",
+            "nullable": true
+          },
+          "summary": {
+            "type": "object",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      },
+      "ReviewRejectDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "ReviewMoreInfoDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "CreateOpportunityDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "funderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scholarship",
+              "fellowship",
+              "grant"
+            ]
+          },
+          "amount": {
+            "type": "object"
+          },
+          "currency": {
+            "type": "object"
+          },
+          "deadline": {
+            "type": "object",
+            "format": "date",
+            "nullable": true
+          },
+          "eligibility": {
+            "type": "object",
+            "nullable": true
+          },
+          "requirements": {
+            "type": "object"
+          },
+          "documentsNeeded": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "applyUrl": {
+            "type": "object",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "object",
+            "nullable": true
+          },
+          "summary": {
+            "type": "object",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      },
+      "CreateSourceDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "country": {
+            "type": "object"
+          },
+          "type": {
+            "type": "object"
+          },
+          "trustTier": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          "frequencyMinutes": {
+            "type": "number",
+            "minimum": 1,
+            "default": 60
+          },
+          "needsBrowser": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "UpdateSourceDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "country": {
+            "type": "object",
+            "nullable": true
+          },
+          "type": {
+            "type": "object",
+            "nullable": true
+          },
+          "trustTier": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          "frequencyMinutes": {
+            "type": "number",
+            "minimum": 1
+          },
+          "needsBrowser": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResolveReportDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "resolved",
+              "dismissed"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "status"
+        ]
+      }
+    }
+  }
+}

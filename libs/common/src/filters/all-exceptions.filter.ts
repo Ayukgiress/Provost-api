@@ -55,12 +55,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
       }
       errorName = exception.name.replace('Exception', '');
     } else {
-      // Non-HTTP exceptions: log the full stack but return a generic body.
-      const err =
-        exception instanceof Error ? exception : new Error(String(exception));
+      // Avoid logging exception messages/stacks: database/provider errors can
+      // contain SQL, credentials, or user-supplied values.
+      const route = request.route?.path;
       this.logger.error(
-        `${request.method} ${request.url} -> ${err.message}`,
-        err.stack,
+        `${request.method} ${typeof route === 'string' ? `${request.baseUrl}${route}` : 'unmatched'} -> ${status}`,
       );
     }
 
@@ -69,7 +68,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message,
       error: errorName,
       timestamp: new Date().toISOString(),
-      path: request.url,
+      path: request.path,
     });
   }
 }

@@ -11,6 +11,8 @@ import { SavedModule } from './me/saved/saved.module.js';
 import { OpportunitiesModule } from './opportunities/opportunities.module.js';
 import { ReportsModule } from './opportunities/reports.module.js';
 import { AdminModule } from './admin/admin.module.js';
+import { DocumentsModule } from './me/documents/documents.module.js';
+import { DraftsModule } from './me/drafts/drafts.module.js';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { AdminModule } from './admin/admin.module.js';
     DatabaseModule,
     HealthModule,
     ProfileModule,
+    DocumentsModule,
+    DraftsModule,
     OpportunitiesModule,
     MatchesModule,
     SavedModule,
