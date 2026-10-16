@@ -19,6 +19,20 @@ export const envSchema = z.object({
   // PostgreSQL (Supabase-hosted) connection string
   DATABASE_URL: z.string().url().startsWith('postgres'),
 
+  // Worker integrations are optional so liveness is independent of vendors.
+  SCRAPER_USER_AGENT: z.string().default('ProvostBot/1.0'),
+  SCRAPER_CONTACT_EMAIL: z.string().email().default('contact@provost.app'),
+  SCRAPER_DOMAIN_DELAY_MS: z.coerce.number().int().nonnegative().default(1500),
+  SCRAPER_TIMEOUT_MS: z.coerce.number().int().positive().default(20000),
+  TRUSTED_OFFICIAL_DOMAINS: z.string().default('').transform((value) => value.split(',').map((item) => item.trim().toLowerCase()).filter(Boolean)),
+  EXTRACTION_PROVIDER: z.enum(['none', 'openai-compatible']).default('none'),
+  EXTRACTION_API_KEY: z.string().optional(),
+  EXTRACTION_BASE_URL: z.string().url().default('https://api.openai.com/v1'),
+  EXTRACTION_MODEL: z.string().default('gpt-4o-mini'),
+  EMAIL_PROVIDER: z.enum(['none', 'resend']).default('none'),
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().default('Provost <updates@provost.app>'),
+
   // Supabase Auth — the API only verifies JWTs, it never issues them.
   // Either the JWT secret or the JWKS URL must be provided.
   SUPABASE_JWT_SECRET: z.string().optional(),

@@ -19,6 +19,7 @@ async function bootstrap(): Promise<void> {
   const port = config.get('WORKER_PORT', { infer: true });
   await app.listen(port);
   logger.log(`Provost worker listening on port ${port}`, 'Bootstrap');
+  app.enableShutdownHooks();
 }
 
 void bootstrap();

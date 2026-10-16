@@ -14,16 +14,24 @@ const COMPLETENESS_FIELDS: Array<keyof UpdateProfileDto> = [
 export class ProfileService {
   constructor(@InjectRepository(Profile) private readonly profiles: Repository<Profile>) {}
 
-  async get(userId: string): Promise<Profile & { completeness: number }> {
+  async get(userId: string, email?: string): Promise<Profile & { completeness: number }> {
     const profile = await this.profiles.findOne({ where: { userId } });
-    if (profile) return profile;
-    return this.profiles.create({ userId, completeness: 0 });
+    if (profile) {
+      if (email && profile.email !== email) {
+        profile.email = email;
+        return this.profiles.save(profile);
+      }
+      return profile;
+    }
+    const created = this.profiles.create({ userId, email: email ?? null, completeness: 0 });
+    return email ? this.profiles.save(created) : created;
   }
 
-  async update(userId: string, dto: UpdateProfileDto): Promise<Profile> {
+  async update(userId: string, dto: UpdateProfileDto, email?: string): Promise<Profile> {
     const profile = await this.profiles.findOne({ where: { userId } }) ??
-      this.profiles.create({ userId });
+      this.profiles.create({ userId, email: email ?? null });
     Object.assign(profile, dto);
+    if (email) profile.email = email;
     profile.completeness = this.calculateCompleteness(profile);
     return this.profiles.save(profile);
   }

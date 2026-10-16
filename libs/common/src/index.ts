@@ -9,6 +9,7 @@ export { Roles } from './decorators/roles.decorator.js';
 export { CurrentUser } from './decorators/current-user.decorator.js';
 export { Public } from './decorators/public.decorator.js';
 export { AllExceptionsFilter } from './filters/all-exceptions.filter.js';
+export { assessOpportunityTrust, type TrustAssessment, type TrustAssessmentInput } from './trust/trust-score.js';
 export {
   UserRole,
   type AuthenticatedUser,

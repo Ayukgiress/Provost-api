@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { EducationLevel } from '@provost/database';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNumber,
@@ -21,6 +22,10 @@ export class UpdateProfileDto {
   @ApiPropertyOptional({ example: 'CA' })
   @IsOptional() @IsString() @MaxLength(100)
   residenceCountry?: string | null;
+
+  @ApiPropertyOptional({ description: 'Opt out of deadline reminder emails', default: true })
+  @IsOptional() @IsBoolean()
+  deadlineRemindersEnabled?: boolean;
 
   @ApiPropertyOptional({ example: 1998, minimum: 1900, maximum: 2100 })
   @IsOptional() @IsInt() @Min(1900) @Max(2100)

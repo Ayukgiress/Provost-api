@@ -82,6 +82,12 @@ export class Opportunity extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   applyUrl: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  contactEmail: string | null;
+
+  @Column({ type: 'boolean', nullable: true })
+  applicantFeeRequired: boolean | null;
+
   /** URL the opportunity was scraped from. */
   @Column({ type: 'text', nullable: true })
   sourceUrl: string | null;

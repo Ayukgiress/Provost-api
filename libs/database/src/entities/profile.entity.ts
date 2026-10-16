@@ -15,6 +15,13 @@ export class Profile extends BaseEntity {
   @Column({ type: 'uuid' })
   userId: string;
 
+  /** Mirrored from the authenticated Supabase JWT for reminder delivery. */
+  @Column({ type: 'text', nullable: true })
+  email: string | null;
+
+  @Column({ type: 'boolean', default: true })
+  deadlineRemindersEnabled: boolean;
+
   /** Country of citizenship (ISO code or name). */
   @Column({ type: 'text', nullable: true })
   citizenship: string | null;

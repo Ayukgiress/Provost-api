@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from '@provost/common';
+import {
+  DatabaseModule, Funder, Notification, Opportunity, Profile, ReviewItem, SavedItem, ScrapeRun, Snapshot, Source,
+} from '@provost/database';
 import { WorkerHealthController } from './health/worker-health.controller.js';
+import { WorkerService } from './worker.service.js';
 
 /**
  * Worker application root module.
@@ -9,10 +14,14 @@ import { WorkerHealthController } from './health/worker-health.controller.js';
  * AI extraction, reminders) on pg-boss. It exposes only a /health endpoint
  * so it can be crash/restarted independently of the API.
  *
- * Job modules are wired here in later phases.
  */
 @Module({
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DatabaseModule,
+    TypeOrmModule.forFeature([Funder, Notification, Opportunity, Profile, ReviewItem, SavedItem, ScrapeRun, Snapshot, Source]),
+  ],
   controllers: [WorkerHealthController],
+  providers: [WorkerService],
 })
 export class WorkerModule {}

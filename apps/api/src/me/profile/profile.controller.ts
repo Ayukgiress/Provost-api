@@ -13,12 +13,12 @@ export class ProfileController {
   @Get()
   @ApiOperation({ summary: 'Get the authenticated applicant profile' })
   @ApiOkResponse({ description: 'Profile and 0–100 completeness score' })
-  get(@CurrentUser() user: AuthenticatedUser) { return this.profiles.get(user.id); }
+  get(@CurrentUser() user: AuthenticatedUser) { return this.profiles.get(user.id, user.email); }
 
   @Put()
   @ApiOperation({ summary: 'Create or update the authenticated applicant profile' })
   @ApiOkResponse({ description: 'Updated profile and completeness score' })
   update(@CurrentUser() user: AuthenticatedUser, @Body() dto: UpdateProfileDto) {
-    return this.profiles.update(user.id, dto);
+    return this.profiles.update(user.id, dto, user.email);
   }
 }

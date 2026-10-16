@@ -7,7 +7,7 @@ import { Source } from './source.entity.js';
  * and re-processing without re-fetching.
  */
 @Entity('snapshots')
-@Index(['sourceId', 'fetchedAt'])
+@Index(['sourceId', 'url', 'fetchedAt'])
 export class Snapshot extends BaseEntity {
   @Column({ type: 'uuid' })
   sourceId: string;
@@ -15,6 +15,10 @@ export class Snapshot extends BaseEntity {
   @ManyToOne(() => Source, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'source_id' })
   source: Source;
+
+  /** Exact page URL represented by this snapshot. */
+  @Column({ type: 'text' })
+  url: string;
 
   /** Hash of the page content (for deduplication / change detection). */
   @Column({ type: 'text', nullable: true })

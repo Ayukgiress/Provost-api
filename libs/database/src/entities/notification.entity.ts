@@ -8,6 +8,7 @@ import { NotificationChannel } from './enums.js';
 @Entity('notifications')
 @Index(['userId', 'sentAt'])
 @Index(['opportunityId'])
+@Index(['userId', 'opportunityId', 'type'], { unique: true, where: '"opportunity_id" IS NOT NULL AND "type" LIKE \'deadline_reminder_%\'' })
 export class Notification extends BaseEntity {
   /** Supabase auth user id. */
   @Column({ type: 'uuid' })
