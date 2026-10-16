@@ -14,6 +14,36 @@ export class MatchesService {
     @InjectRepository(Profile) private readonly profiles: Repository<Profile>,
   ) {}
 
+  async explain(userId: string, opportunityId: string) {
+    const profile = await this.profiles.findOne({ where: { userId } });
+    const opportunity = await this.opportunities.createQueryBuilder('opportunity')
+      .leftJoinAndSelect('opportunity.funder', 'funder')
+      .where('opportunity.id = :opportunityId', { opportunityId })
+      .andWhere('opportunity.status = :published', { published: OpportunityStatus.Published })
+      .andWhere('(opportunity.deadline IS NULL OR opportunity.deadline >= CURRENT_DATE)')
+      .getOne();
+    if (!opportunity) return null;
+    const match = matchOpportunity({
+      educationLevel: profile?.educationLevel,
+      fieldOfStudy: profile?.fieldOfStudy,
+      citizenship: profile?.citizenship,
+      countryOfResidence: profile?.residenceCountry,
+      gpa: profile?.gpa === null || profile?.gpa === undefined ? null : Number(profile.gpa),
+      birthYear: profile?.birthYear,
+      experienceYears: profile?.experienceYears,
+      languages: profile?.languages,
+      goals: profile?.goals,
+      testScores: profile?.testScores,
+    }, {
+      id: opportunity.id,
+      title: opportunity.title,
+      eligibility: opportunity.eligibility as Record<string, unknown> | null,
+      deadline: opportunity.deadline,
+      documentsNeeded: opportunity.documentsNeeded,
+    });
+    return { opportunity, ...match };
+  }
+
   async list(userId: string, filters: ListMatchesDto) {
     const profile = await this.profiles.findOne({ where: { userId } });
     const candidates = await this.opportunities.createQueryBuilder('opportunity')

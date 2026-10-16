@@ -30,3 +30,8 @@ export { Report } from './entities/report.entity.js';
 export { Notification } from './entities/notification.entity.js';
 export { Subscription } from './entities/subscription.entity.js';
 export { AuditLog } from './entities/audit-log.entity.js';
+export { AssistantConversation } from './entities/assistant-conversation.entity.js';
+export { AssistantMessage, AssistantMessageRole } from './entities/assistant-message.entity.js';
+export { AssistantUsage } from './entities/assistant-usage.entity.js';
+export { AssistantFeedback } from './entities/assistant-feedback.entity.js';
+export { AssistantPendingAction, AssistantPendingActionStatus } from './entities/assistant-pending-action.entity.js';

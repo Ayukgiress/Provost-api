@@ -16,6 +16,21 @@ export class SavedService {
     @InjectRepository(Subscription) private readonly subscriptions: Repository<Subscription>,
   ) {}
 
+  async canSave(userId: string, opportunityId: string): Promise<boolean> {
+    const existing = await this.savedItems.findOne({ where: { userId, opportunityId } });
+    if (existing) return true;
+    const subscription = await this.subscriptions.createQueryBuilder('subscription')
+      .where('subscription.user_id = :userId', { userId })
+      .andWhere('subscription.plan = :plan', { plan: SubscriptionPlan.Plus })
+      .andWhere("subscription.status IN ('active', 'trialing')")
+      .andWhere('(subscription.ends_at IS NULL OR subscription.ends_at > NOW())')
+      .orderBy('subscription.created_at', 'DESC')
+      .getOne();
+    if (subscription) return true;
+    const activeCount = await this.savedItems.count({ where: { userId, status: In(ACTIVE_STATUSES) } });
+    return activeCount < 3;
+  }
+
   list(userId: string) {
     return this.savedItems.find({ where: { userId }, relations: { opportunity: { funder: true } }, order: { createdAt: 'DESC' } });
   }

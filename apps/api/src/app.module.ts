@@ -13,6 +13,7 @@ import { ReportsModule } from './opportunities/reports.module.js';
 import { AdminModule } from './admin/admin.module.js';
 import { DocumentsModule } from './me/documents/documents.module.js';
 import { DraftsModule } from './me/drafts/drafts.module.js';
+import { AssistantModule } from './assistant/assistant.module.js';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DraftsModule } from './me/drafts/drafts.module.js';
     ProfileModule,
     DocumentsModule,
     DraftsModule,
+    AssistantModule,
     OpportunitiesModule,
     MatchesModule,
     SavedModule,

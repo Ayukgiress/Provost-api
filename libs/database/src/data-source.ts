@@ -16,6 +16,11 @@ import { Report } from './entities/report.entity.js';
 import { Notification } from './entities/notification.entity.js';
 import { Subscription } from './entities/subscription.entity.js';
 import { AuditLog } from './entities/audit-log.entity.js';
+import { AssistantConversation } from './entities/assistant-conversation.entity.js';
+import { AssistantMessage } from './entities/assistant-message.entity.js';
+import { AssistantUsage } from './entities/assistant-usage.entity.js';
+import { AssistantFeedback } from './entities/assistant-feedback.entity.js';
+import { AssistantPendingAction } from './entities/assistant-pending-action.entity.js';
 
 /**
  * All database entities, registered both for the running app and the
@@ -36,6 +41,11 @@ export const entities = [
   Notification,
   Subscription,
   AuditLog,
+  AssistantConversation,
+  AssistantMessage,
+  AssistantUsage,
+  AssistantFeedback,
+  AssistantPendingAction,
 ];
 
 /**
