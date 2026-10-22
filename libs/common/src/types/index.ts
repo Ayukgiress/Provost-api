@@ -31,6 +31,6 @@ export interface SupabaseJwtPayload {
   };
   exp?: number;
   iat?: number;
-  aud?: string;
+  aud?: string | string[];
   iss?: string;
 }

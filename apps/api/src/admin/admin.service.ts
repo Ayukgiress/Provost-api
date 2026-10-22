@@ -31,6 +31,7 @@ import type {
   ReviewQueueListDto,
   ReviewRejectDto,
   UpdateSourceDto,
+  VerifySourceDto,
 } from './dto/admin.dto.js';
 
 @Injectable()
@@ -205,6 +206,23 @@ export class AdminService {
       Object.assign(source, dto);
       const saved = await repo.save(source);
       await this.audit(manager, actorId, dto.active === false ? 'source.pause' : 'source.edit', 'source', id, { changedFields: Object.keys(dto) });
+      return saved;
+    });
+  }
+
+  async verifySource(id: string, dto: VerifySourceDto, actorId: string) {
+    return this.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(Source);
+      const source = await repo.findOne({ where: { id } });
+      if (!source) throw new NotFoundException('Source not found');
+      source.verificationStatus = dto.status;
+      source.verifiedBy = actorId;
+      source.verificationNote = dto.note ?? null;
+      source.verifiedAt = new Date();
+      // Fake sources are automatically deactivated.
+      if (dto.status === 'fake') source.active = false;
+      const saved = await repo.save(source);
+      await this.audit(manager, actorId, `source.verify.${dto.status}`, 'source', id, { note: dto.note ?? null });
       return saved;
     });
   }

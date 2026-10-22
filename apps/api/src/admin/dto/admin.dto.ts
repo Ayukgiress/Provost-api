@@ -163,6 +163,16 @@ export class UpdateSourceDto {
   active?: boolean;
 }
 
+export class VerifySourceDto {
+  @ApiProperty({ enum: ['trusted', 'fake', 'unverified'] })
+  @IsIn(['trusted', 'fake', 'unverified'])
+  status: 'trusted' | 'fake' | 'unverified';
+
+  @ApiPropertyOptional({ maxLength: 2000 })
+  @IsOptional() @IsString() @MaxLength(2000)
+  note?: string;
+}
+
 export class ResolveReportDto {
   @ApiProperty({ enum: ['resolved', 'dismissed'] })
   @IsIn(['resolved', 'dismissed'])

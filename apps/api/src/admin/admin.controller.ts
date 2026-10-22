@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles, UserRole, type AuthenticatedUser } from '@provost/common';
 import {
   AdminListDto,
@@ -22,6 +22,7 @@ import {
   ReviewQueueListDto,
   ReviewRejectDto,
   UpdateSourceDto,
+  VerifySourceDto,
 } from './dto/admin.dto.js';
 import { AdminService } from './admin.service.js';
 
@@ -103,6 +104,15 @@ export class AdminController {
     @Body() dto: UpdateSourceDto,
     @CurrentUser() user: AuthenticatedUser,
   ) { return this.admin.updateSource(id, dto, user.id); }
+
+  @Post('sources/:id/verify')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Mark a source as trusted, fake, or unverified' })
+  verifySource(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: VerifySourceDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) { return this.admin.verifySource(id, dto, user.id); }
 
   @Post('sources/:id/run-now')
   @HttpCode(202)

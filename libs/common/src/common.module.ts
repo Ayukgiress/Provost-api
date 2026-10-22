@@ -6,7 +6,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 import { RolesGuard } from './guards/roles.guard.js';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter.js';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
 
 /**
  * Global shared module: configuration (Zod-validated), structured logging,
@@ -29,10 +28,6 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
     },
     {
       provide: APP_FILTER,

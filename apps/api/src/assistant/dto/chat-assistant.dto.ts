@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsUUID, MaxLength, MinLength, IsOptional } from 'class-validator';
+import { IsString, IsUUID, MaxLength, MinLength, IsOptional, IsLocale } from 'class-validator';
 
 export class ChatAssistantDto {
   @ApiProperty({ maxLength: 10000 })
@@ -9,4 +9,8 @@ export class ChatAssistantDto {
   @ApiPropertyOptional({ format: 'uuid' })
   @IsOptional() @IsUUID()
   conversationId?: string;
+
+  @ApiPropertyOptional({ description: 'BCP 47 locale tag, e.g. "fr" or "en-US"' })
+  @IsOptional() @IsString() @MaxLength(20)
+  locale?: string;
 }

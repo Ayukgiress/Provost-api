@@ -123,6 +123,12 @@ export class WorkerService implements OnModuleInit, OnApplicationShutdown {
   private async scrapeSource({ sourceId }: SourceJob): Promise<void> {
     const source = await this.sources.findOne({ where: { id: sourceId, active: true } });
     if (!source) return;
+    // Skip scraping sources flagged as fake by an admin.
+    if (source.verificationStatus === 'fake') {
+      source.active = false;
+      await this.sources.save(source);
+      return;
+    }
     const startedAt = new Date();
     const run = await this.scrapeRuns.save(this.scrapeRuns.create({ sourceId, startedAt, status: 'running', itemsFound: 0 }));
     try {
@@ -212,8 +218,19 @@ export class WorkerService implements OnModuleInit, OnApplicationShutdown {
       unusuallyLargeAward: parsed.amount != null && parsed.amount >= 100_000,
     });
     const rejected = assessment.autoRejected;
-    const queue = rejected ? ReviewQueue.AutoRejected : source.trustTier === TrustTier.A && assessment.score >= 70 && !assessment.feeNeedsReview && parsed.type !== null
-      ? ReviewQueue.QuickApprove : ReviewQueue.NeedsReview;
+    // Auto-publish only when: source is admin-verified trusted, Tier A, score ≥ 70,
+    // no fee flag, and type is known. Everything else goes to a human queue.
+    const autoPublish = !rejected
+      && source.verificationStatus === 'trusted'
+      && source.trustTier === TrustTier.A
+      && assessment.score >= 70
+      && !assessment.feeNeedsReview
+      && parsed.type !== null;
+    const queue = rejected
+      ? ReviewQueue.AutoRejected
+      : source.trustTier === TrustTier.A && assessment.score >= 70 && !assessment.feeNeedsReview && parsed.type !== null
+        ? ReviewQueue.QuickApprove
+        : ReviewQueue.NeedsReview;
     const slugBase = `${parsed.funder}-${parsed.title}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 90) || 'opportunity';
     const opportunity = await this.opportunities.save(this.opportunities.create({
       title: parsed.title,
@@ -230,9 +247,10 @@ export class WorkerService implements OnModuleInit, OnApplicationShutdown {
       applicantFeeRequired: parsed.applicantFeeRequired,
       sourceUrl: pageUrl,
       summary: parsed.summary,
-      status: rejected ? OpportunityStatus.Rejected : OpportunityStatus.Pending,
+      status: rejected ? OpportunityStatus.Rejected : autoPublish ? OpportunityStatus.Published : OpportunityStatus.Pending,
       trustScore: assessment.score,
       lastCheckedAt: new Date(),
+      ...(autoPublish ? { verifiedAt: new Date() } : {}),
       slug: `${slugBase}-${snapshot.contentHash?.slice(0, 8) ?? Date.now().toString(36)}`,
       contentHash: snapshot.contentHash,
     }));

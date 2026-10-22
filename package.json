@@ -31,6 +31,7 @@
     "migration:run": "node --env-file=.env --import tsx ./node_modules/typeorm/cli.js -d libs/database/src/data-source.ts migration:run",
     "migration:revert": "node --env-file=.env --import tsx ./node_modules/typeorm/cli.js -d libs/database/src/data-source.ts migration:revert",
     "seed": "node --env-file=.env --import tsx libs/database/src/seed.ts",
+    "seed:sources": "node --env-file=.env --import tsx libs/database/src/seed-sources.ts",
     "openapi:export": "pnpm build:api && node --env-file=.env scripts/export-openapi.mjs"
   },
   "dependencies": {

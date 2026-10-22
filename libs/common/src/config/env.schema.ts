@@ -50,7 +50,7 @@ export const envSchema = z.object({
   // Optional service-role configuration used only for account and file deletion.
   SUPABASE_URL: z.string().url().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
-  SUPABASE_STORAGE_BUCKET: z.string().default('documents'),
+  SUPABASE_STORAGE_BUCKET: z.string().default('scholarship-docs'),
 
   // Rate limiting
   THROTTLE_TTL: z.coerce.number().int().positive().default(60),

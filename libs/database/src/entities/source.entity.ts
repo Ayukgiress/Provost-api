@@ -45,4 +45,25 @@ export class Source extends BaseEntity {
   /** Status of the last scrape run (e.g. "success", "error"). */
   @Column({ type: 'text', nullable: true })
   lastStatus: string | null;
+
+  /**
+   * Admin-assigned verification status.
+   * - unverified: not yet reviewed
+   * - trusted: admin confirmed this is a legitimate source
+   * - fake: admin flagged this as fraudulent/unreliable
+   */
+  @Column({ type: 'text', default: 'unverified' })
+  verificationStatus: 'unverified' | 'trusted' | 'fake';
+
+  /** Supabase user id of the admin who last verified this source. */
+  @Column({ type: 'uuid', nullable: true })
+  verifiedBy: string | null;
+
+  /** Admin note explaining the verification decision. */
+  @Column({ type: 'text', nullable: true })
+  verificationNote: string | null;
+
+  /** When the source was last verified. */
+  @Column({ type: 'timestamptz', nullable: true })
+  verifiedAt: Date | null;
 }
